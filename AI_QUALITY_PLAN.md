@@ -120,11 +120,10 @@ Reeglite fail üksi ei garanteeri midagi — järgnev tehniline tugi on vajalik:
 Neist praegu on repos rakendatud reeglite fail, testid/lint ise,
 **GitHub Actions CI workflow** (`.github/workflows/ci.yml`, käivitab
 `npm ci`, `npm run lint` ja `npm test` igal pull request'il ja push'il
-`main`/`master` harusse) ning **PR template**
+`main`/`master` harusse), **PR template**
 (`.github/PULL_REQUEST_TEMPLATE.md`), kus arendaja või AI peab kinnitama
-kontrollnimekirja täitmist. Branch protection (nõue, et CI peab olema
-roheline enne merge'imist) on seadistatav ainult GitHubi veebiliidese/repo
-seadete kaudu ja jääb hetkel käsitsi tehtavaks sammuks — vt allpool juhist.
+kontrollnimekirja täitmist, ning **branch protection** `master` harul
+(seadistatud GitHub API kaudu, vt allpool).
 
 ### Boonusülesanded — mis on tehtud
 
@@ -135,21 +134,29 @@ seadete kaudu ja jääb hetkel käsitsi tehtavaks sammuks — vt allpool juhist.
   algusega".
 - ✅ PR template, kus arendaja või AI peab kinnitama, et testid on
   läbitud (`.github/PULL_REQUEST_TEMPLATE.md`).
-- ⬜ Branch protection — nõuab käsitsi seadistamist GitHubi veebiliideses
-  (vt juhis allpool), ei ole failina lisatav.
+- ✅ Branch protection `master` harul (vt allpool) — otsene push ilma
+  rohelise CI-ta ei ole enam võimalik, ka mitte repo omanikule.
 - ⬜ Eraldi reeglid frontendile ja backendile — praeguses projektis on
   frontend väga õhuke (staatiline `app/public/index.html`), mistõttu
   ühine `AGENTS.md` katab mõlemat piisavalt; eraldi failid poleks
   praegu sisulist väärtust lisanud.
 
-### Branch protection seadistamine (käsitsi samm GitHubis)
+### Branch protection seadistus (`master` haru)
 
-CI workflow ise ei blokeeri merge'imist, kui seda GitHubi seadetes eraldi
-ei nõuta. Selleks, et `main` haru oleks tegelikult kaitstud:
+Seadistatud GitHubi REST API kaudu (`gh api .../branches/master/protection`)
+järgmiste reeglitega:
 
-1. Mine repos: **Settings → Branches → Add branch protection rule**.
-2. Vali `main` (või `master`) haru.
-3. Lülita sisse **"Require status checks to pass before merging"** ja
-   vali kontrolliks CI workflow'i `test-and-lint` job.
-4. Soovi korral lülita sisse ka **"Require a pull request before merging"**
-   ja **"Require approvals"** (vähemalt 1 review).
+- **Required status check:** `Testid ja lint (app/)` (CI workflow job),
+  `strict: true` — haru peab enne merge'imist olema CI-nõutud kontrolliga
+  ajakohane ja roheline.
+- **Require a pull request before merging** — otsene push `master`-isse
+  ei ole enam lubatud (`required_pull_request_reviews` objekt on seatud,
+  nõutavate kinnituste arv on 0, kuna tegu on üksikarendaja projektiga).
+- **Enforce admins: true** — reegel kehtib ka repo omanikule endale, mitte
+  ainult kaastöötajatele.
+- **Allow force pushes: false**, **Allow deletions: false** — haru ajalugu
+  ei saa üle kirjutada ega haru kustutada.
+
+Tulemus: kui testid või lint ebaõnnestuvad, ei saa muudatus (ka AI-agendi
+tehtud) `master` harusse jõuda, sõltumata sellest, kas keegi selle käsitsi
+sunniks (force push) või proovib otse pushida.
