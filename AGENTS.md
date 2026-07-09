@@ -87,9 +87,9 @@ mitte TypeScript) — seega need pole nõutud kontrollnimekirjas.
 **Tähtis:** see reeglite fail üksi ei kaitse `main` haru. Tehniline kaitse
 CI-kontrollide osas on juba olemas (`.github/workflows/ci.yml` käivitab
 testid ja lindi igal PR-il ja push'il), samuti on olemas PR template
-(`.github/PULL_REQUEST_TEMPLATE.md`) kontrollnimekirjaga. Branch protection
-ja kohustuslik PR review GitHubi seadetes tuleb seadistada eraldi
-(vt `AI_QUALITY_PLAN.md`).
+(`.github/PULL_REQUEST_TEMPLATE.md`) kontrollnimekirjaga ning branch
+protection `master` harul (nõuab rohelist CI-d, keelab otsese push'i ja
+force push'i ka repo omanikule — vt `AI_QUALITY_PLAN.md`).
 
 ## 6. Muudatuste ulatuse piiramine
 
