@@ -6,11 +6,16 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "import": "node import.js"
+    "import": "node import.js",
+    "test": "node --test \"test/*.test.js\"",
+    "lint": "eslint ."
   },
   "dependencies": {
     "express": "^4.19.2",
-    "mysql2": "^3.11.0",
-    "fast-xml-parser": "^4.4.1"
+    "fast-xml-parser": "^4.4.1",
+    "mysql2": "^3.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4"
   }
 }

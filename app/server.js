@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { pool } from './db.js';
+import { validateTimeRange, validateParticipants } from './validation.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -57,10 +58,10 @@ app.post('/api/bookings', async (req, res) => {
     const { classroom_id, organizer_id, lesson_type_id, booking_date,
             start_time, end_time, participants_count, status } = req.body;
 
-    if (end_time <= start_time)
-      return res.status(400).json({ error: 'Lõppaeg peab olema hilisem kui algusaeg' });
-    if (Number(participants_count) < 0)
-      return res.status(400).json({ error: 'Osalejate arv ei saa olla negatiivne' });
+    const timeError = validateTimeRange(start_time, end_time);
+    if (timeError) return res.status(400).json({ error: timeError });
+    const participantsError = validateParticipants(participants_count);
+    if (participantsError) return res.status(400).json({ error: participantsError });
     if (await checkOverlap(classroom_id, booking_date, start_time, end_time))
       return res.status(409).json({ error: 'See klass on sel ajal juba broneeritud (ajaline kattumine)' });
 
@@ -81,10 +82,10 @@ app.put('/api/bookings/:id', async (req, res) => {
     const { classroom_id, organizer_id, lesson_type_id, booking_date,
             start_time, end_time, participants_count, status } = req.body;
 
-    if (end_time <= start_time)
-      return res.status(400).json({ error: 'Lõppaeg peab olema hilisem kui algusaeg' });
-    if (Number(participants_count) < 0)
-      return res.status(400).json({ error: 'Osalejate arv ei saa olla negatiivne' });
+    const timeError = validateTimeRange(start_time, end_time);
+    if (timeError) return res.status(400).json({ error: timeError });
+    const participantsError = validateParticipants(participants_count);
+    if (participantsError) return res.status(400).json({ error: participantsError });
     if (await checkOverlap(classroom_id, booking_date, start_time, end_time, id))
       return res.status(409).json({ error: 'See klass on sel ajal juba broneeritud (ajaline kattumine)' });
 

@@ -1,0 +1,84 @@
+=== npm test ===
+$ npm test
+
+> arvutiklassid-app@1.0.0 test
+> node --test "test/*.test.js"
+
+TAP version 13
+# Subtest: validateTimeRange: lubab kehtiva vahemiku (algus enne lõppu)
+ok 1 - validateTimeRange: lubab kehtiva vahemiku (algus enne lõppu)
+  ---
+  duration_ms: 1.323463
+  type: 'test'
+  ...
+# Subtest: validateTimeRange: lükkab tagasi, kui lõpp on enne algust
+ok 2 - validateTimeRange: lükkab tagasi, kui lõpp on enne algust
+  ---
+  duration_ms: 0.258359
+  type: 'test'
+  ...
+# Subtest: validateTimeRange: lükkab tagasi, kui lõpp võrdub algusega
+ok 3 - validateTimeRange: lükkab tagasi, kui lõpp võrdub algusega
+  ---
+  duration_ms: 0.143498
+  type: 'test'
+  ...
+# Subtest: validateParticipants: lubab positiivset arvu
+ok 4 - validateParticipants: lubab positiivset arvu
+  ---
+  duration_ms: 0.217505
+  type: 'test'
+  ...
+# Subtest: validateParticipants: lubab nulli
+ok 5 - validateParticipants: lubab nulli
+  ---
+  duration_ms: 0.259306
+  type: 'test'
+  ...
+# Subtest: validateParticipants: lükkab tagasi negatiivse arvu
+ok 6 - validateParticipants: lükkab tagasi negatiivse arvu
+  ---
+  duration_ms: 0.197425
+  type: 'test'
+  ...
+# Subtest: validateParticipants: lükkab tagasi negatiivse arvu, mis on antud stringina
+ok 7 - validateParticipants: lükkab tagasi negatiivse arvu, mis on antud stringina
+  ---
+  duration_ms: 0.153603
+  type: 'test'
+  ...
+# Subtest: validateBookingFields: tagastab null, kui kõik väljad on kehtivad
+ok 8 - validateBookingFields: tagastab null, kui kõik väljad on kehtivad
+  ---
+  duration_ms: 0.241736
+  type: 'test'
+  ...
+# Subtest: validateBookingFields: tagastab ajavea enne osalejate viga, kui mõlemad on vigased
+ok 9 - validateBookingFields: tagastab ajavea enne osalejate viga, kui mõlemad on vigased
+  ---
+  duration_ms: 0.389069
+  type: 'test'
+  ...
+# Subtest: validateBookingFields: tagastab osalejate vea, kui ainult see on vigane
+ok 10 - validateBookingFields: tagastab osalejate vea, kui ainult see on vigane
+  ---
+  duration_ms: 0.535296
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 119.127422
+
+=== npm run lint ===
+$ npm run lint
+
+> arvutiklassid-app@1.0.0 lint
+> eslint .
+
+(lint läbis ilma ühegi hoiatuse/veata)
