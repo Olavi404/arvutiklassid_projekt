@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-07-09T00:09:06.558Z",
+  "description": "Top 5 kõige kasutatumad arvutiklassid (tundide järgi)",
+  "classrooms": [
+    {
+      "rank": 1,
+      "classroom_id": 1,
+      "name": "A-101",
+      "total_bookings": 6,
+      "total_hours": 10
+    },
+    {
+      "rank": 2,
+      "classroom_id": 3,
+      "name": "B-201",
+      "total_bookings": 3,
+      "total_hours": 5.5
+    },
+    {
+      "rank": 3,
+      "classroom_id": 5,
+      "name": "C-105",
+      "total_bookings": 2,
+      "total_hours": 3.5
+    },
+    {
+      "rank": 4,
+      "classroom_id": 2,
+      "name": "A-102",
+      "total_bookings": 1,
+      "total_hours": 2
+    },
+    {
+      "rank": 5,
+      "classroom_id": 4,
+      "name": "B-202",
+      "total_bookings": 1,
+      "total_hours": 2
+    }
+  ]
+}

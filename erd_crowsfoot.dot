@@ -1,0 +1,63 @@
+graph ERD {
+    graph [rankdir=LR, splines=polyline, nodesep=1.0, ranksep=1.8, bgcolor="white", fontname="Helvetica"];
+    node [shape=plain, fontname="Helvetica"];
+    edge [fontname="Helvetica", fontsize=11, penwidth=1.3, color="#4A5568"];
+
+    classroom [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2C5282">
+      <TR><TD BGCOLOR="#2C5282" ALIGN="CENTER"><FONT COLOR="white"><B>classroom</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B> id INT</TD></TR>
+      <TR><TD ALIGN="LEFT">name VARCHAR(50)</TD></TR>
+      <TR><TD ALIGN="LEFT">location VARCHAR(100)</TD></TR>
+      <TR><TD ALIGN="LEFT">capacity INT</TD></TR>
+      <TR><TD ALIGN="LEFT">computers_count INT</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at TIMESTAMP</TD></TR>
+    </TABLE>>];
+
+    user_or_group [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2F855A">
+      <TR><TD BGCOLOR="#2F855A" ALIGN="CENTER"><FONT COLOR="white"><B>user_or_group</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B> id INT</TD></TR>
+      <TR><TD ALIGN="LEFT">name VARCHAR(100)</TD></TR>
+      <TR><TD ALIGN="LEFT">type ENUM</TD></TR>
+      <TR><TD ALIGN="LEFT">email VARCHAR(150)</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at TIMESTAMP</TD></TR>
+    </TABLE>>];
+
+    lesson_type [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#B7791F">
+      <TR><TD BGCOLOR="#B7791F" ALIGN="CENTER"><FONT COLOR="white"><B>lesson_type</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B> id INT</TD></TR>
+      <TR><TD ALIGN="LEFT">name VARCHAR(50)</TD></TR>
+      <TR><TD ALIGN="LEFT">description VARCHAR(255)</TD></TR>
+    </TABLE>>];
+
+    booking [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#822727">
+      <TR><TD BGCOLOR="#822727" ALIGN="CENTER"><FONT COLOR="white"><B>booking</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK</B> id INT</TD></TR>
+      <TR><TD ALIGN="LEFT"><B>FK</B> classroom_id INT</TD></TR>
+      <TR><TD ALIGN="LEFT"><B>FK</B> organizer_id INT</TD></TR>
+      <TR><TD ALIGN="LEFT"><B>FK</B> lesson_type_id INT</TD></TR>
+      <TR><TD ALIGN="LEFT">booking_date DATE</TD></TR>
+      <TR><TD ALIGN="LEFT">start_time TIME</TD></TR>
+      <TR><TD ALIGN="LEFT">end_time TIME</TD></TR>
+      <TR><TD ALIGN="LEFT">participants_count INT</TD></TR>
+      <TR><TD ALIGN="LEFT">status ENUM</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at TIMESTAMP</TD></TR>
+    </TABLE>>];
+
+    booking_participant [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#553C9A">
+      <TR><TD BGCOLOR="#553C9A" ALIGN="CENTER"><FONT COLOR="white"><B>booking_participant</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK,FK</B> booking_id INT</TD></TR>
+      <TR><TD ALIGN="LEFT"><B>PK,FK</B> participant_id INT</TD></TR>
+    </TABLE>>];
+
+    /* Seosed crow's foot notatsioonis: tee = "1", crow = "N" (many) */
+    classroom -- booking [taillabel="1", headlabel="N", dir=both, arrowtail=tee, arrowhead=crow];
+    user_or_group -- booking [taillabel="1", headlabel="N", dir=both, arrowtail=tee, arrowhead=crow, label="organizer"];
+    lesson_type -- booking [taillabel="1", headlabel="N", dir=both, arrowtail=tee, arrowhead=crow];
+    booking -- booking_participant [taillabel="1", headlabel="N", dir=both, arrowtail=tee, arrowhead=crow];
+    user_or_group -- booking_participant [taillabel="1", headlabel="N", dir=both, arrowtail=tee, arrowhead=crow, label="participant"];
+}

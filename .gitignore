@@ -1,0 +1,14 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Logid ja ajutised failid
+*.log
+/tmp/
+
+# Keskkonnamuutujad (paroolid!)
+.env
+
+# OS
+.DS_Store
+Thumbs.db

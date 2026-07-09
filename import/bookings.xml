@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookings>
+  <booking>
+    <classroom>A-101</classroom>
+    <organizer>Jaan Tamm</organizer>
+    <lesson_type>loeng</lesson_type>
+    <date>2026-01-12</date>
+    <start>09:00</start>
+    <end>10:30</end>
+    <participants>22</participants>
+    <status>completed</status>
+    <extra_participants>
+      <participant>TAK25</participant>
+    </extra_participants>
+  </booking>
+  <booking>
+    <classroom>A-101</classroom>
+    <organizer>Mari Kask</organizer>
+    <lesson_type>praktikum</lesson_type>
+    <date>2026-01-12</date>
+    <start>11:00</start>
+    <end>12:30</end>
+    <participants>18</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>B-201</classroom>
+    <organizer>Peeter Saar</organizer>
+    <lesson_type>loeng</lesson_type>
+    <date>2026-01-13</date>
+    <start>08:15</start>
+    <end>09:45</end>
+    <participants>28</participants>
+    <status>completed</status>
+    <extra_participants>
+      <participant>TAK24</participant>
+      <participant>RIF25</participant>
+    </extra_participants>
+  </booking>
+  <booking>
+    <classroom>B-202</classroom>
+    <organizer>Liis Mägi</organizer>
+    <lesson_type>eksam</lesson_type>
+    <date>2026-01-14</date>
+    <start>10:00</start>
+    <end>12:00</end>
+    <participants>16</participants>
+    <status>planned</status>
+  </booking>
+  <booking>
+    <classroom>A-101</classroom>
+    <organizer>TAK25</organizer>
+    <lesson_type>iseseisev töö</lesson_type>
+    <date>2026-01-15</date>
+    <start>14:00</start>
+    <end>16:00</end>
+    <participants>20</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>C-105</classroom>
+    <organizer>Toomas Rebane</organizer>
+    <lesson_type>praktikum</lesson_type>
+    <date>2026-01-15</date>
+    <start>09:00</start>
+    <end>10:30</end>
+    <participants>15</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>B-201</classroom>
+    <organizer>Jaan Tamm</organizer>
+    <lesson_type>loeng</lesson_type>
+    <date>2026-01-19</date>
+    <start>09:00</start>
+    <end>10:30</end>
+    <participants>25</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>A-101</classroom>
+    <organizer>Mari Kask</organizer>
+    <lesson_type>praktikum</lesson_type>
+    <date>2026-01-19</date>
+    <start>11:00</start>
+    <end>13:00</end>
+    <participants>21</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>C-106</classroom>
+    <organizer>Liis Mägi</organizer>
+    <lesson_type>loeng</lesson_type>
+    <date>2026-01-20</date>
+    <start>12:00</start>
+    <end>13:30</end>
+    <participants>22</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>A-101</classroom>
+    <organizer>Peeter Saar</organizer>
+    <lesson_type>loeng</lesson_type>
+    <date>2026-01-21</date>
+    <start>08:15</start>
+    <end>09:45</end>
+    <participants>23</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>D-301</classroom>
+    <organizer>Toomas Rebane</organizer>
+    <lesson_type>konsultatsioon</lesson_type>
+    <date>2026-01-21</date>
+    <start>15:00</start>
+    <end>16:00</end>
+    <participants>8</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>B-201</classroom>
+    <organizer>TAK24</organizer>
+    <lesson_type>iseseisev töö</lesson_type>
+    <date>2026-01-22</date>
+    <start>10:00</start>
+    <end>12:30</end>
+    <participants>26</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>A-102</classroom>
+    <organizer>Jaan Tamm</organizer>
+    <lesson_type>praktikum</lesson_type>
+    <date>2026-01-26</date>
+    <start>09:00</start>
+    <end>11:00</end>
+    <participants>19</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>A-101</classroom>
+    <organizer>Mari Kask</organizer>
+    <lesson_type>loeng</lesson_type>
+    <date>2026-01-26</date>
+    <start>12:00</start>
+    <end>13:30</end>
+    <participants>24</participants>
+    <status>completed</status>
+  </booking>
+  <booking>
+    <classroom>C-105</classroom>
+    <organizer>Liis Mägi</organizer>
+    <lesson_type>eksam</lesson_type>
+    <date>2026-01-28</date>
+    <start>10:00</start>
+    <end>12:00</end>
+    <participants>18</participants>
+    <status>planned</status>
+  </booking>
+</bookings>

@@ -1,0 +1,23 @@
+=== ENNE: booking ridade arv ===
+booking_count
+15
+
+=== KUSTUTAN: DROP TABLE booking_participant + booking (kontrollitud test) ===
+Tabelid kustutatud.
+
+=== PÄRAST KUSTUTAMIST: tabelite loend ===
+Tables_in_arvutiklassid
+classroom
+lesson_type
+user_or_group
+v_top_classrooms
+v_weekly_classroom_usage
+
+=== TAASTAN backupist ===
+Taastamine tehtud.
+
+=== PÄRAST TAASTAMIST: booking ridade arv ===
+booking_count
+15
+participant_count
+3

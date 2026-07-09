@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arvutiklasside broneeringud</title>
+<style>
+  :root {
+    --bg: #f4f6fb; --card: #fff; --ink: #1a202c; --muted: #718096;
+    --primary: #2c5282; --primary-d: #1f3f66; --line: #e2e8f0;
+    --green: #2f855a; --red: #c53030; --amber: #b7791f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    background: var(--bg); color: var(--ink); }
+  header { background: var(--primary); color: #fff; padding: 18px 28px; }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 4px 0 0; opacity: .85; font-size: 13px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+  .card { background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 20px; margin-bottom: 22px; }
+  .card h2 { margin: 0 0 14px; font-size: 16px; color: var(--primary); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+  tr:hover td { background: #f9fafc; }
+  .badge { padding: 2px 8px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .planned { background: #e6f0fb; color: var(--primary); }
+  .completed { background: #e6f6ec; color: var(--green); }
+  .cancelled { background: #fdeaea; color: var(--red); }
+  form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  form label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 4px; }
+  input, select { padding: 8px; border: 1px solid var(--line); border-radius: 6px; font-size: 14px; }
+  .actions { grid-column: 1 / -1; display: flex; gap: 10px; }
+  button { cursor: pointer; border: none; border-radius: 6px; padding: 9px 16px;
+    font-size: 14px; font-weight: 600; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-d); }
+  .btn-ghost { background: #edf2f7; color: var(--ink); }
+  .btn-edit { background: var(--amber); color: #fff; padding: 4px 10px; font-size: 12px; }
+  .btn-del { background: var(--red); color: #fff; padding: 4px 10px; font-size: 12px; }
+  .msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; display: none; font-size: 14px; }
+  .msg.err { background: #fdeaea; color: var(--red); display: block; }
+  .msg.ok { background: #e6f6ec; color: var(--green); display: block; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 13px; }
+  .bar-label { width: 70px; font-weight: 600; }
+  .bar-track { flex: 1; background: #edf2f7; border-radius: 6px; height: 20px; overflow: hidden; }
+  .bar-fill { background: var(--primary); height: 100%; border-radius: 6px; }
+  .bar-val { width: 70px; text-align: right; color: var(--muted); }
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tab { padding: 6px 14px; border-radius: 6px; background: #edf2f7; cursor: pointer; font-size: 13px; }
+  .tab.active { background: var(--primary); color: #fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Arvutiklasside broneeringute haldus</h1>
+  <p>TAK25 — andmebaasirakendus (CRUD + statistika)</p>
+</header>
+<main>
+  <div id="msg" class="msg"></div>
+
+  <!-- CREATE / EDIT vorm -->
+  <div class="card">
+    <h2 id="formTitle">Lisa uus broneering</h2>
+    <form id="bookingForm">
+      <input type="hidden" id="editId">
+      <label>Klass
+        <select id="classroom_id" required></select>
+      </label>
+      <label>Korraldaja
+        <select id="organizer_id" required></select>
+      </label>
+      <label>Tunni tüüp
+        <select id="lesson_type_id" required></select>
+      </label>
+      <label>Kuupäev
+        <input type="date" id="booking_date" required>
+      </label>
+      <label>Algus
+        <input type="time" id="start_time" required>
+      </label>
+      <label>Lõpp
+        <input type="time" id="end_time" required>
+      </label>
+      <label>Osalejaid
+        <input type="number" id="participants_count" min="0" value="0" required>
+      </label>
+      <label>Staatus
+        <select id="status">
+          <option value="planned">planned</option>
+          <option value="completed">completed</option>
+          <option value="cancelled">cancelled</option>
+        </select>
+      </label>
+      <div class="actions">
+        <button type="submit" class="btn-primary" id="submitBtn">Lisa broneering</button>
+        <button type="button" class="btn-ghost" id="cancelBtn" style="display:none">Tühista muutmine</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- LIST -->
+  <div class="card">
+    <h2>Broneeringud</h2>
+    <table>
+      <thead><tr>
+        <th>Kuupäev</th><th>Aeg</th><th>Klass</th><th>Korraldaja</th>
+        <th>Tüüp</th><th>Osalejaid</th><th>Staatus</th><th></th>
+      </tr></thead>
+      <tbody id="bookingsBody"></tbody>
+    </table>
+  </div>
+
+  <!-- STATISTIKA -->
+  <div class="card">
+    <h2>Statistika</h2>
+    <div class="tabs">
+      <div class="tab active" data-tab="weekly">Kasutus tundides nädalas</div>
+      <div class="tab" data-tab="top">Top klassid</div>
+    </div>
+    <div id="statWeekly"></div>
+    <div id="statTop" style="display:none"></div>
+  </div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let lookups = { classrooms: [], users: [], types: [] };
+
+function showMsg(text, type) {
+  const m = $('msg'); m.textContent = text; m.className = 'msg ' + type;
+  setTimeout(() => { m.className = 'msg'; }, 4000);
+}
+
+async function loadLookups() {
+  lookups = await (await fetch('/api/lookups')).json();
+  fill('classroom_id', lookups.classrooms, c => `${c.name} (max ${c.capacity})`);
+  fill('organizer_id', lookups.users, u => `${u.name} [${u.type}]`);
+  fill('lesson_type_id', lookups.types, t => t.name);
+}
+function fill(id, arr, labelFn) {
+  $(id).innerHTML = arr.map(x => `<option value="${x.id}">${labelFn(x)}</option>`).join('');
+}
+
+async function loadBookings() {
+  const rows = await (await fetch('/api/bookings')).json();
+  $('bookingsBody').innerHTML = rows.map(b => `
+    <tr>
+      <td>${b.booking_date.slice(0,10)}</td>
+      <td>${b.start_time.slice(0,5)}–${b.end_time.slice(0,5)}</td>
+      <td>${b.classroom}</td>
+      <td>${b.organizer}</td>
+      <td>${b.lesson_type}</td>
+      <td>${b.participants_count}</td>
+      <td><span class="badge ${b.status}">${b.status}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn-edit" onclick='editBooking(${JSON.stringify(b)})'>Muuda</button>
+        <button class="btn-del" onclick="deleteBooking(${b.id})">Kustuta</button>
+      </td>
+    </tr>`).join('');
+}
+
+function getForm() {
+  return {
+    classroom_id: $('classroom_id').value,
+    organizer_id: $('organizer_id').value,
+    lesson_type_id: $('lesson_type_id').value,
+    booking_date: $('booking_date').value,
+    start_time: $('start_time').value,
+    end_time: $('end_time').value,
+    participants_count: Number($('participants_count').value),
+    status: $('status').value,
+  };
+}
+
+$('bookingForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const id = $('editId').value;
+  const body = JSON.stringify(getForm());
+  const url = id ? `/api/bookings/${id}` : '/api/bookings';
+  const method = id ? 'PUT' : 'POST';
+  const res = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body });
+  const data = await res.json();
+  if (!res.ok) { showMsg(data.error || 'Viga', 'err'); return; }
+  showMsg(id ? 'Broneering uuendatud' : 'Broneering lisatud', 'ok');
+  resetForm(); loadBookings(); loadStats();
+});
+
+function editBooking(b) {
+  $('editId').value = b.id;
+  $('classroom_id').value = b.classroom_id;
+  $('organizer_id').value = b.organizer_id;
+  $('lesson_type_id').value = b.lesson_type_id;
+  $('booking_date').value = b.booking_date.slice(0,10);
+  $('start_time').value = b.start_time.slice(0,5);
+  $('end_time').value = b.end_time.slice(0,5);
+  $('participants_count').value = b.participants_count;
+  $('status').value = b.status;
+  $('formTitle').textContent = 'Muuda broneeringut #' + b.id;
+  $('submitBtn').textContent = 'Salvesta muudatused';
+  $('cancelBtn').style.display = 'inline-block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function resetForm() {
+  $('bookingForm').reset(); $('editId').value = '';
+  $('formTitle').textContent = 'Lisa uus broneering';
+  $('submitBtn').textContent = 'Lisa broneering';
+  $('cancelBtn').style.display = 'none';
+}
+$('cancelBtn').addEventListener('click', resetForm);
+
+async function deleteBooking(id) {
+  if (!confirm('Kustuta broneering #' + id + '?')) return;
+  const res = await fetch('/api/bookings/' + id, { method: 'DELETE' });
+  if (res.ok) { showMsg('Broneering kustutatud', 'ok'); loadBookings(); loadStats(); }
+  else showMsg('Kustutamine ebaõnnestus', 'err');
+}
+
+async function loadStats() {
+  const weekly = await (await fetch('/api/stats/weekly')).json();
+  const maxH = Math.max(1, ...weekly.map(w => w.hours_used));
+  $('statWeekly').innerHTML = weekly.map(w => `
+    <div class="bar-row">
+      <div class="bar-label">${w.classroom_name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(w.hours_used/maxH*100)}%"></div></div>
+      <div class="bar-val">${w.hours_used}h / N${String(w.year_week).slice(4)}</div>
+    </div>`).join('') || '<p style="color:#718096">Andmed puuduvad</p>';
+
+  const top = await (await fetch('/api/stats/top')).json();
+  $('statTop').innerHTML = `<table><thead><tr>
+      <th>#</th><th>Klass</th><th>Broneeringuid</th><th>Tunde kokku</th></tr></thead><tbody>` +
+    top.map((t,i) => `<tr><td>${i+1}</td><td>${t.classroom_name}</td>
+      <td>${t.total_bookings}</td><td>${t.total_hours}h</td></tr>`).join('') +
+    `</tbody></table>`;
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const which = tab.dataset.tab;
+    $('statWeekly').style.display = which === 'weekly' ? 'block' : 'none';
+    $('statTop').style.display = which === 'top' ? 'block' : 'none';
+  });
+});
+
+// Init
+loadLookups().then(loadBookings).then(loadStats);
+</script>
+</body>
+</html>

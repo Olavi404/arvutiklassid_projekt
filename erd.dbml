@@ -1,0 +1,56 @@
+// ============================================================
+// Arvutiklasside kasutuse andmebaas — DBML lähtefail
+// Ava see fail aadressil https://dbdiagram.io -> uus diagramm ->
+// kleebi kood. dbdiagram.io kuvab ERD (crow's foot) ja oskab
+// eksportida SQL-i (Export -> MySQL). See on projekti CASE-vahend.
+// ============================================================
+
+Table classroom {
+  id              int         [pk, increment]
+  name            varchar(50) [not null, unique]
+  location        varchar(100)
+  capacity        int         [not null]
+  computers_count int         [not null]
+  created_at      timestamp
+}
+
+Table user_or_group {
+  id         int          [pk, increment]
+  name       varchar(100) [not null]
+  type       varchar(10)  [not null, note: 'teacher | group']
+  email      varchar(150) [unique]
+  created_at timestamp
+}
+
+Table lesson_type {
+  id          int         [pk, increment]
+  name        varchar(50) [not null, unique]
+  description varchar(255)
+}
+
+Table booking {
+  id                 int  [pk, increment]
+  classroom_id       int  [not null, ref: > classroom.id]
+  organizer_id       int  [not null, ref: > user_or_group.id]
+  lesson_type_id     int  [not null, ref: > lesson_type.id]
+  booking_date       date [not null]
+  start_time         time [not null]
+  end_time           time [not null]
+  participants_count int  [not null, default: 0]
+  status             varchar(10) [not null, note: 'planned | completed | cancelled']
+  created_at         timestamp
+
+  indexes {
+    (classroom_id, booking_date)
+  }
+}
+
+// N..M vahetabel: booking <-> user_or_group
+Table booking_participant {
+  booking_id     int [ref: > booking.id]
+  participant_id int [ref: > user_or_group.id]
+
+  indexes {
+    (booking_id, participant_id) [pk]
+  }
+}

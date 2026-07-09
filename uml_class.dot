@@ -1,0 +1,67 @@
+digraph UML {
+    graph [rankdir=LR, splines=polyline, nodesep=1.0, ranksep=2.0, bgcolor="white", fontname="Helvetica"];
+    node [shape=plain, fontname="Helvetica"];
+    edge [fontname="Helvetica", fontsize=11, color="#4A5568", penwidth=1.2];
+
+    Classroom [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#2C5282">
+      <TR><TD BGCOLOR="#EBF4FF" ALIGN="CENTER"><B>Classroom</B></TD></TR>
+      <TR><TD ALIGN="LEFT">- id : int {PK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- name : String</TD></TR>
+      <TR><TD ALIGN="LEFT">- location : String</TD></TR>
+      <TR><TD ALIGN="LEFT">- capacity : int</TD></TR>
+      <TR><TD ALIGN="LEFT">- computersCount : int</TD></TR>
+      <TR><TD ALIGN="LEFT">- createdAt : DateTime</TD></TR>
+    </TABLE>>];
+
+    UserOrGroup [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#2F855A">
+      <TR><TD BGCOLOR="#F0FFF4" ALIGN="CENTER"><B>UserOrGroup</B></TD></TR>
+      <TR><TD ALIGN="LEFT">- id : int {PK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- name : String</TD></TR>
+      <TR><TD ALIGN="LEFT">- type : Enum{teacher,group}</TD></TR>
+      <TR><TD ALIGN="LEFT">- email : String</TD></TR>
+      <TR><TD ALIGN="LEFT">- createdAt : DateTime</TD></TR>
+    </TABLE>>];
+
+    LessonType [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#B7791F">
+      <TR><TD BGCOLOR="#FFFFF0" ALIGN="CENTER"><B>LessonType</B></TD></TR>
+      <TR><TD ALIGN="LEFT">- id : int {PK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- name : String</TD></TR>
+      <TR><TD ALIGN="LEFT">- description : String</TD></TR>
+    </TABLE>>];
+
+    Booking [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#822727">
+      <TR><TD BGCOLOR="#FFF5F5" ALIGN="CENTER"><B>Booking</B></TD></TR>
+      <TR><TD ALIGN="LEFT">- id : int {PK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- classroomId : int {FK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- organizerId : int {FK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- lessonTypeId : int {FK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- bookingDate : Date</TD></TR>
+      <TR><TD ALIGN="LEFT">- startTime : Time</TD></TR>
+      <TR><TD ALIGN="LEFT">- endTime : Time</TD></TR>
+      <TR><TD ALIGN="LEFT">- participantsCount : int</TD></TR>
+      <TR><TD ALIGN="LEFT">- status : Enum</TD></TR>
+      <TR><TD ALIGN="LEFT">- createdAt : DateTime</TD></TR>
+    </TABLE>>];
+
+    BookingParticipant [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#553C9A">
+      <TR><TD BGCOLOR="#FAF5FF" ALIGN="CENTER"><B>BookingParticipant</B></TD></TR>
+      <TR><TD ALIGN="LEFT">- bookingId : int {PK,FK}</TD></TR>
+      <TR><TD ALIGN="LEFT">- participantId : int {PK,FK}</TD></TR>
+    </TABLE>>];
+
+    /* Assotsiatsioonid multiplikatiivsustega. Teemant = agregatsioon/kompositsioon */
+    edge [dir=both, arrowtail=diamond, arrowhead=vee];
+    Classroom   -> Booking [taillabel="1", headlabel="0..*", label="  omab"];
+    UserOrGroup -> Booking [taillabel="1", headlabel="0..*", label="  korraldab"];
+    LessonType  -> Booking [taillabel="1", headlabel="0..*", label="  liigitab"];
+
+    /* N..M lahendatud assotsiatiivklassiga */
+    edge [dir=both, arrowtail=none, arrowhead=vee];
+    Booking     -> BookingParticipant [taillabel="1", headlabel="0..*"];
+    UserOrGroup -> BookingParticipant [taillabel="1", headlabel="0..*"];
+}

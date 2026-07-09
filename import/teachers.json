@@ -1,0 +1,13 @@
+{
+  "users": [
+    { "name": "Jaan Tamm",     "type": "teacher", "email": "jaan.tamm@kool.ee" },
+    { "name": "Mari Kask",     "type": "teacher", "email": "mari.kask@kool.ee" },
+    { "name": "Peeter Saar",   "type": "teacher", "email": "peeter.saar@kool.ee" },
+    { "name": "Liis Mägi",     "type": "teacher", "email": "liis.magi@kool.ee" },
+    { "name": "Toomas Rebane", "type": "teacher", "email": "toomas.rebane@kool.ee" },
+    { "name": "TAK25",         "type": "group",   "email": "tak25@kool.ee" },
+    { "name": "TAK24",         "type": "group",   "email": "tak24@kool.ee" },
+    { "name": "RIF25",         "type": "group",   "email": "rif25@kool.ee" },
+    { "name": "IT23",          "type": "group",   "email": "it23@kool.ee" }
+  ]
+}
