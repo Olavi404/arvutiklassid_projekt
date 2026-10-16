@@ -1,4 +1,11 @@
-// validation.js — broneeringu ärireeglite valideerimine (DB-sõltumatu, testitav)
+/**
+ * @file        validation.js
+ * @description Broneeringu ärireeglite 1 ja 2 valideerimine. DB-sõltumatu, et seda
+ *              saaks üksustestida ilma andmebaasita (vt test/validation.test.js).
+ * @author      Olavi Keerd (TAK25)
+ * @created     2026-07-09
+ * @modified    2026-07-09
+ */
 
 /**
  * Kontrollib, kas lõppaeg on hilisem kui algusaeg.

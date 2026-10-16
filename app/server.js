@@ -1,4 +1,14 @@
-// server.js — Express CRUD rakendus arvutiklasside broneeringute jaoks
+/**
+ * @file        server.js
+ * @description Express REST API arvutiklasside broneeringute haldamiseks
+ *              (CRUD + statistika) ja staatilise frontendi serveerimine.
+ * @author      Olavi Keerd (TAK25)
+ * @created     2026-07-09
+ * @modified    2026-10-16
+ *
+ * Käivitamine: DB_USER=app_user DB_PASS=app_pass_123 PORT=3000 node server.js
+ * Algoritmi kirjeldus: ../algoritm.md
+ */
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -12,8 +22,19 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// --- Abifunktsioon: kontrolli ajalist kattumist (ärireegel 4) ---
+/**
+ * Kontrollib, kas klassil on samal kuupäeval ajaliselt kattuv broneering (ärireegel 4).
+ * Kaks vahemikku kattuvad, kui olemasolev.algus < uus.lõpp JA olemasolev.lõpp > uus.algus
+ * (põhjendus: ../algoritm.md, punkt 3). Tühistatud broneeringuid ei arvestata.
+ * @param {number|string} classroomId klassi id
+ * @param {string} date kuupäev "YYYY-MM-DD"
+ * @param {string} start uue broneeringu algus "HH:MM"
+ * @param {string} end uue broneeringu lõpp "HH:MM"
+ * @param {number|string|null} [excludeId] muudetava broneeringu id, et see ei kattuks iseendaga
+ * @returns {Promise<boolean>} true, kui leidub kattuv broneering
+ */
 async function checkOverlap(classroomId, date, start, end, excludeId = null) {
+  // Parameetrite järjekord vastab SQL-is: start_time < uus lõpp, end_time > uus algus
   const params = [classroomId, date, end, start];
   let sql = `SELECT id FROM booking
              WHERE classroom_id = ? AND booking_date = ?
@@ -25,6 +46,10 @@ async function checkOverlap(classroomId, date, start, end, excludeId = null) {
 }
 
 // ============ LOOKUP-ANDMED (vormide jaoks) ============
+/**
+ * GET /api/lookups — klassid, kasutajad ja tunnitüübid vormi rippmenüüde jaoks.
+ * Vastus: 200 { classrooms, users, types } | 500 { error }
+ */
 app.get('/api/lookups', async (req, res) => {
   try {
     const [classrooms] = await pool.query('SELECT id, name, capacity FROM classroom ORDER BY name');
@@ -35,6 +60,10 @@ app.get('/api/lookups', async (req, res) => {
 });
 
 // ============ READ: kõik broneeringud (list) ============
+/**
+ * GET /api/bookings — kõik broneeringud koos klassi, korraldaja ja tunnitüübi nimega,
+ * uuemad eespool. Vastus: 200 [ broneering ] | 500 { error }
+ */
 app.get('/api/bookings', async (req, res) => {
   try {
     const [rows] = await pool.query(`
@@ -53,6 +82,11 @@ app.get('/api/bookings', async (req, res) => {
 });
 
 // ============ CREATE: uus broneering ============
+/**
+ * POST /api/bookings — loob uue broneeringu pärast ärireeglite 1, 2 ja 4 kontrolli
+ * (reegel 3 ehk mahtuvus kontrollitakse DB triggeris).
+ * Vastus: 201 { id } | 400 vale aeg/osalejad | 409 ajaline kattumine | 500 { error }
+ */
 app.post('/api/bookings', async (req, res) => {
   try {
     const { classroom_id, organizer_id, lesson_type_id, booking_date,
@@ -76,6 +110,10 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 // ============ UPDATE: muuda broneeringut ============
+/**
+ * PUT /api/bookings/:id — muudab olemasolevat broneeringut samade kontrollidega nagu POST.
+ * Vastus: 200 { ok } | 400 | 404 ei leitud | 409 ajaline kattumine | 500 { error }
+ */
 app.put('/api/bookings/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -101,6 +139,10 @@ app.put('/api/bookings/:id', async (req, res) => {
 });
 
 // ============ DELETE: kustuta broneering ============
+/**
+ * DELETE /api/bookings/:id — kustutab broneeringu; lisaosalejad kustuvad
+ * kaasa (ON DELETE CASCADE). Vastus: 200 { ok } | 404 ei leitud | 500 { error }
+ */
 app.delete('/api/bookings/:id', async (req, res) => {
   try {
     const [r] = await pool.query('DELETE FROM booking WHERE id=?', [req.params.id]);
@@ -110,6 +152,10 @@ app.delete('/api/bookings/:id', async (req, res) => {
 });
 
 // ============ STATISTIKA: klasside kasutus tundides nädalas ============
+/**
+ * GET /api/stats/weekly — klasside kasutus ISO-nädala kaupa (vaade v_weekly_classroom_usage).
+ * Vastus: 200 [ { classroom_name, year_week, bookings_count, hours_used } ] | 500 { error }
+ */
 app.get('/api/stats/weekly', async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -121,6 +167,10 @@ app.get('/api/stats/weekly', async (req, res) => {
 });
 
 // ============ STATISTIKA: top klassid ============
+/**
+ * GET /api/stats/top — 5 kõige rohkem tunde kasutatud klassi (vaade v_top_classrooms).
+ * Vastus: 200 [ { classroom_id, classroom_name, total_bookings, total_hours } ] | 500 { error }
+ */
 app.get('/api/stats/top', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM v_top_classrooms');
