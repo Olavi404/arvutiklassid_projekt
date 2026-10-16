@@ -160,3 +160,7 @@ järgmiste reeglitega:
 Tulemus: kui testid või lint ebaõnnestuvad, ei saa muudatus (ka AI-agendi
 tehtud) `master` harusse jõuda, sõltumata sellest, kas keegi selle käsitsi
 sunniks (force push) või proovib otse pushida.
+
+**Tõend:** seadistuse eksport (GitHubi API vastus) on failis
+`branch_protection_proof.txt`. See endpoint nõuab repo admin-õigust, seega
+väline arvustaja ei saa seda ise API kaudu lugeda (403/404).
