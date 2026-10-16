@@ -1,8 +1,14 @@
-// export.js — ekspordib andmed CSV ja JSON formaatidesse
-//   export/bookings_summary.csv  — broneeringute koond kuu kaupa
-//   export/top5_classes.json     — top 5 kõige kasutatumad klassid
-//
-// Käivitamine:  node export.js
+/**
+ * @file        export.js
+ * @description Ekspordib aruanded CSV ja JSON formaatidesse:
+ *                export/bookings_summary.csv  — broneeringute koond kuu ja klassi kaupa
+ *                export/top5_classes.json     — top 5 kõige kasutatumat klassi
+ * @author      Olavi Keerd (TAK25)
+ * @created     2026-07-09
+ * @modified    2026-07-09
+ *
+ * Käivitamine: DB_USER=app_user DB_PASS=app_pass_123 node export.js
+ */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,6 +17,11 @@ import { pool } from './db.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const EXPORT_DIR = path.resolve(__dirname, '..', 'export');
 
+/**
+ * Kirjutab faili bookings_summary.csv broneeringute arvu, osalejate summa ja tundide
+ * koondi kuu ja klassi kaupa. Tühistatud broneeringuid ei arvestata.
+ * @param {import('mysql2/promise').PoolConnection} conn
+ */
 async function exportSummaryCSV(conn) {
   const [rows] = await conn.query(`
     SELECT
@@ -33,6 +44,10 @@ async function exportSummaryCSV(conn) {
   console.log(`  bookings_summary.csv: ${rows.length} rida`);
 }
 
+/**
+ * Kirjutab faili top5_classes.json 5 kõige rohkem kasutatud klassiga (vaade v_top_classrooms).
+ * @param {import('mysql2/promise').PoolConnection} conn
+ */
 async function exportTop5JSON(conn) {
   const [rows] = await conn.query('SELECT * FROM v_top_classrooms');
   const out = {
@@ -52,6 +67,7 @@ async function exportTop5JSON(conn) {
   console.log(`  top5_classes.json: ${rows.length} klassi`);
 }
 
+/** Käivitab mõlemad ekspordid ja sulgeb lõpus andmebaasiühenduse. */
 async function main() {
   const conn = await pool.getConnection();
   try {
